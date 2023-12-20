@@ -1,24 +1,24 @@
 import sys
+import os
+import pytest
 
 
-def setup_function(function):
-    print("setting up", function)
-
-
-def test_func1():
+def test_pass():
+    print("Passing test: Message to stdout")
+    print("Passing test: Message to stderr", file=sys.stderr)
+    os.system(
+        "echo 'Passing test: Message to stdout - Running as subprocess'"
+    )  # stdin = 0, stdout = 1, stderr = 2
+    os.system("echo 'Passing test: Message to stderr - Running as subprocess' >&2")
     assert True
 
 
-# def test_func2():
-#     assert False
-
-
-def test_myoutput(capsys):  # or use "capfd" for fd-level
-    print("hello")
-    sys.stderr.write("world\n")
-    captured = capsys.readouterr()
-    assert captured.out == "hello\n"
-    assert captured.err == "world\n"
-    print("next")
-    captured = capsys.readouterr()
-    assert captured.out == "next\n"
+# @pytest.mark.skip(reason="don't want to test it")
+def test_fail():
+    print("Failing test: Message to stdout")
+    print("Failing test: Message to stderr", file=sys.stderr)
+    os.system(
+        "echo 'Failing test: Message to stdout - Running as subprocess'"
+    )  # stdin = 0, stdout = 1, stderr = 2
+    os.system("echo 'Failing test: Message to stderr - Running as subprocess' >&2")
+    assert False
